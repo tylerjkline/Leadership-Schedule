@@ -1,5 +1,4 @@
-## Script Overview
-
+# Leadership Schedule Validator
 This script automates shift conflict detection and checks for scheduling gaps in a Google Sheet. It flags problematic shift patterns, like back-to-back late closers followed by early openers, and logs the results both in the sheet and a debug log.
 
 ### Key Features:
@@ -11,7 +10,7 @@ This script automates shift conflict detection and checks for scheduling gaps in
 
 - **Debug Logging**: Tracks all actions in a "Debug" sheet, logging every check and outcome for each employee shift.
 
-## Requirements for Deployment
+### Requirements for Deployment
 
 1. **Employee Names**: Must be entered in cells `A6`, `A8`, `A10`, and `A12`.  
 2. **Shift Schedule**:
@@ -22,59 +21,51 @@ This script automates shift conflict detection and checks for scheduling gaps in
 
 The script runs automatically on edits and displays results in cell `B15`.
 
-
 # Version History for Conflict Detection Script
 
 ## Version 1.0 - Basic checking features
-- Ability to read employee shifts from cells.
-- Basic checks for missing schedules (closers, openers, mid shifts).
-- Outputs a warning message in B15 of each sheet.
+The script could read employee shifts from designated cells and perform basic checks for missing schedules like openers, closers, and mid-shifts. It summarized these issues with a warning message in cell B15 of each sheet.
 
-## Version 1.1 - Added logging and debug sheet
-- Introduced debug mode with detailed logging of all conflict checks.
-- Added a new "Debug" sheet to track all actions and reasons behind conflict detections.
-- Debug log includes the exact employee being checked and the reason for conflicts (like insufficient hours between shifts).
+### Version 1.1 - Shift pattern recognition and scheduling improvements
+This update added the ability to recognize common shift patterns (e.g., 7a-6p, 8a-7p, 9a-8p) and improved detection for missing openers and closers. It also began skipping conflict checks for employees marked as "OFF" or "PTO."
 
-## Version 1.2 - Conflict thresholds and time calculations
-- Added logic to calculate the number of hours between shifts.
-- Implemented a threshold (e.g., 12 hours) to flag shifts that occur too soon after a closing shift.
-- Introduced functions for parsing shifts into 24-hour time for accurate time comparisons.
+### Version 1.2 - Time calculation and conflict thresholds
+This version introduced logic to calculate hours between consecutive shifts, with a threshold (e.g., 12 hours) to detect and flag shifts occurring too soon after a closing shift.
 
-## Version 1.3 - Shift pattern improvements
-- Recognized common shift patterns such as mid shifts (7a-6p, 8a-7p, 9a-8p).
-- Improved detection logic to ensure accurate checks for closers and openers by time.
-- Skipped conflict detection if the employee has "OFF" or "PTO" as their shift.
+### Version 1.3 - Date handling improvements
+Improved the handling of dates by parsing them from row 4 of the sheet and displaying both the day of the week and the date in conflict messages. This update also included fixes for minor timezone issues.
 
-## Version 1.4 - Date handling improvement
-- Added parsing of the date from cells in row 4 (B4, C4, etc.).
-- Incorporated logic to display both the day of the week and the date for conflict messages.
-- Fixed minor timezone issues by ensuring dates are processed correctly with Utilities.formatDate.
-
-## Version 1.5 - Refined display messages and logging
-- Changed messages in B15 to remove dates, only displaying weekdays (e.g., "No mid shift on Monday").
-- Debug log continued to display full details, including the date (e.g., "Monday 10/6").
-- Improved readability of warning and conflict messages.
-
-## Version 1.6 - Bug fixes for day/date alignment
-- Corrected a bug where the displayed date in the sheet was off by one day.
-- Ensured that the correct weekday is displayed with each warning (e.g., "Monday 10/14" rather than "Monday 10/13").
-
-## Version 1.7 - Final adjustments for date parsing and timezone issues
-- Fixed issues with date parsing, ensuring the script does not misinterpret the date and shows accurate weekdays.
-- Kept debug information consistent while ensuring that displayed messages in the sheet only show relevant warnings (without the date).
+### Version 1.4 - Message refinement and display enhancements
+Refined conflict messages by removing dates from the user-facing output, instead displaying only the day of the week (e.g., "No mid shift on Monday"). Debug logging continued to include full details with both day and date.
 
 ---
 
-## Version 2.0 - Dynamic employee name fetching and conflict detection refinements
-- Replaced hardcoded employee names with dynamic fetching from cells A6, A8, A10, and A12.
-- Allowed employee names to be changed directly in the sheet without updating the script.
-- Added detection for **CRITICAL** conflicts when an employee closes at 10p and then opens at 6a the next day.
-- Added **Caution** warnings for employees closing at 10p and starting at 7a or 8a the next day.
+## Version 2.0 - Major update: dynamic employee management, conflict detection, and debug overhaul
 
-### Version 2.0a - Consolidated mid-shift warnings
-- Consolidated mid-shift warnings into a single line (e.g., "Caution | No mid shift scheduled on Monday, Wednesday, Friday") to avoid listing each day separately.
+### Dynamic Employee Handling
+Introduced dynamic fetching of employee names from cells `A6`, `A8`, `A10`, and `A12`. This eliminates the need for hardcoding employee names into the script and allows for easier adjustments to employee rosters without modifying the code.
 
-### Version 2.0b - Better time formatting and consolidation of opener/closer warnings
-- Improved readability of shift time warnings by converting shift times like "8a-7p" to human-readable formats like "8am after closing on Monday".
-- Consolidated opener and closer warnings into two lines: "Opener needed on [days]" and "Closer needed on [days]".
+### Enhanced Conflict Detection
+New logic for detecting shift conflicts, including:
+- **CRITICAL conflicts**: Flagged when an employee closes at 10pm and opens the next day at 6am.
+- **Caution conflicts**: Flagged when an employee closes at 10pm and starts the next day at 7am or 8am.
+These new detection rules help prevent scheduling issues and reduce manual effort by automatically identifying potential problems based on shift patterns.
+
+### Multi-level Conflict Prioritization
+The script now organizes conflict messages into **priority tiers**. CRITICAL issues are displayed at the top, followed by Caution warnings, ensuring that the most important scheduling conflicts are highlighted for immediate attention.
+
+### Debug Overhaul
+The debug system was significantly overhauled to include detailed tracking of every check performed by the script. Logs now capture not only the presence of scheduling conflicts but also the reasons behind them. The debug sheet logs the exact employee, day, shift, and the reason for conflicts, such as insufficient hours between shifts. This provides much clearer visibility into the inner workings of the conflict checks and makes troubleshooting easier.
+
+### Consolidated Shift Warnings
+Warnings for missing openers, closers, and mid-shifts are now consolidated into single lines for each type, such as "Opener needed on Monday, Tuesday." This makes the output cleaner and easier to interpret, reducing the clutter from individual warnings for each day.
+
+---
+
+### Version 2.0a - Improved time formatting and conflict messages
+Improved readability of shift time warnings by converting time ranges like "8a-7p" into human-readable formats (e.g., "8am after closing on Monday"). Also ensured clearer conflict messaging for early shift starts after late closings.
+
+### Version 2.0b - Consolidated opener/closer warnings
+Consolidated opener and closer warnings into two lines: "Opener needed on [days]" and "Closer needed on [days]," simplifying the display of missing shifts while keeping CRITICAL warnings at the top, followed by Caution warnings with an empty line between.
+
 - Ensured that **CRITICAL** warnings appear at the top, followed by an empty line, and then **Caution** warnings.
