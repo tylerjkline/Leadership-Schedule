@@ -35,14 +35,13 @@ Added parsing for dates from row 4 and improved conflict messages by displaying 
 ---
 
 ## Version 2.0 - Major update: Dynamic employee management, conflict detection, and debug overhaul
-- **Dynamic Employee Handling**: Automatically fetches employee names from cells, removing the need for hardcoding.
-- **Enhanced Conflict Detection**: Flags **CRITICAL** conflicts when employees close at 10pm and open the next day at 6am, and **Caution** conflicts for 7am or 8am opens.
-- **Criticality Warnings**: Organizes conflicts into priority tiers, with CRITICAL issues displayed first.
-- **Debug Improvements**: Expanded the debug sheet to include detailed logs of each check, capturing employees, shifts, and reasons for conflicts.
-- **Consolidated Shift Warnings**: Combines warnings for missing openers, closers, and mid-shifts into single lines for each type (e.g., "Opener needed on Monday, Tuesday").
-- **Version 2.0a - Time formatting and clearer messaging, shift time warnings are now easier to read (e.g., "8am after closing on Monday"). Enhanced conflict messaging for early starts after late closes.
-- **Version 2.0b - Consolidated opener/closer warnings, opener and closer warnings are consolidated into two lines ("Opener needed on [days]" and "Closer needed on [days]"), with CRITICAL warnings displayed first, followed by Caution warnings with spacing.
+- Automatically fetches employee names from cells, removing the need for hardcoding, flags **CRITICAL** conflicts when employees close at 10pm and open the next day at 6am, and **Caution** conflicts for 7am or 8am opens. Assigns a 'score'.
+- **Debug/Display Improvements**: Expanded the debug sheet to include detailed logs of each check, capturing employees, shifts, and reasons for conflicts. Also combined warnings displayed in B15 missing openers, closers, and mid-shifts into single lines for each type (e.g., "Opener needed on Monday, Tuesday"). Also improved broad readability.
 
+## Version 2.5 - Major update: Debugger Overhaul, Logic/Performance Rework
+- **Debugger Overhaul and Performance Enhancements**: Completely redesigned the debug logging system for better clarity and efficiency. Implemented batch data retrieval using getValues(), adjusted loops to minimize interactions with the spreadsheet, and reduced method calls to improve script execution speed.
+- **Enhanced Conflict Detection Logic and Status Messages**: Updated logic to only consider 6 am shifts as openers and recognize 7 am and 8 am shifts as early shifts. Adjusted logic to set the status to "CAUTION" when an employee starts before 9 am after closing the previous day at 10 pm. Improved status messages in cell B15, ensuring the status column accurately reflects detected conditions.
+- **Additional Fixes: Added logic to handle empty shift values, preventing script failures, and adjusted the script to only validate the sheet that was edited, improving performance.**
 
 # Function Walkthrough
 
